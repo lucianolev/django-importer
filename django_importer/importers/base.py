@@ -60,8 +60,10 @@ class Importer(object):
             instance = self.get_instance(data)
             # Feed instance with data
             self.feed_instance(data, instance)
-            # Try to save the instance or keep the error
             try:
+                # Clean the instance before saving
+                instance.full_clean()
+                # Save the instance
                 self.save_item(item, data, instance)
             except Exception, e:
                 self.save_error(data, sys.exc_info())
