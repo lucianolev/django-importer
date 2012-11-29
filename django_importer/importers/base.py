@@ -36,13 +36,15 @@ class Importer(object):
         self.loaded = False
         self.errors = []
     
-    def save_error(self, data, exception_info):
+    def save_error(self, line_num, data, exception, traceback):
         """
         Saves an error in the error list. 
         """
         # TODO: what to do with errors? Let it flow? Write to a log file?
-        self.errors.append({'data': data,
-                            'exception': ''.join(format_exception(*exception_info)),
+        self.errors.append({'line_num': line_num,
+                            'data': data,
+                            'exception': exception,
+                            'traceback': ''.join(format_exception(*traceback)),
                             })
     
     def parse(self):
@@ -53,7 +55,7 @@ class Importer(object):
         if not self.loaded:
             self.load(self.source)
         
-        for item in self.get_items():
+        for line_num, item in self.get_items():
             # Parse the fields from the source into a dict
             data = self.parse_item(item)
             # Get the instance from the DB, or a new one
@@ -66,7 +68,7 @@ class Importer(object):
                 # Save the instance
                 self.save_item(item, data, instance)
             except Exception, e:
-                self.save_error(data, sys.exc_info())
+                self.save_error(line_num, data, e, sys.exc_info())
 
         # Unload the source
         self.unload()

@@ -36,11 +36,11 @@ class CSVImporter(Importer):
         headers = reader.next()
         # Read each line yielding a dictionary mapping
         # the column headers to the row values
-        for row in reader:
+        for line_num, row in list(enumerate(reader, start=1)):
             # Skip empty rows
             if not row:
                 continue
-            yield dict(zip(headers, row))
+            yield line_num, dict(zip(headers, row))
     
     def get_value(self, item, source_name):
         """
