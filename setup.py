@@ -28,6 +28,6 @@ setup(
     author=u'Enrico Batista da Luz',
     author_email='rico.bl@gmail.com',
     url='http://github.com/ricobl/django-importer/',
-    packages=['django_importer', 'django_importer.importers'],
+    packages=['django_importer', 'django_importer.importers', 'django_importer.error_formatters'],
 )
 
