@@ -4,8 +4,13 @@ class ErrorFormatter(object):
     pre_errors_message = 'The following errors were found when importing:'
     post_errors_message = 'File importing finished successfully with some import errors.'
 
+    common_fields_map = {
+        '__all__': '(General)'
+    }
+
     def __init__(self, field_map=None):
         self.field_map = field_map or {}
+        self.field_map.update(self.common_fields_map)
 
     def format_error(self, error, importer_options):
         raise NotImplementedError
@@ -24,7 +29,7 @@ class ErrorFormatter(object):
             for data_transformer in self.data_transformers():
                 output_data = data_transformer(self, output_data)
 
-            field_text = " %s: %s" % (field_name, output_data)
+            field_text = " %s: '%s'" % (field_name, output_data)
             field_list.append(field_text)
 
         return instance_data % ','.join(field_list)
